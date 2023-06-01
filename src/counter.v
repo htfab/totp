@@ -1,17 +1,21 @@
 `default_nettype none
 
-module seven_segment_seconds #( parameter MAX_COUNT = 1000 ) (
-  input [7:0] io_in,
-  output [7:0] io_out
+module tt_um_example #( parameter MAX_COUNT = 1000 ) (
+  input  wire [7:0] ui_in,   // Dedicated inputs
+  output wire [7:0] uo_out,  // Dedicated outputs
+  input  wire [7:0] uio_in,  // IOs: Input path
+  output wire [7:0] uio_out, // IOs: Output path
+  output wire [7:0] uio_oe,  // IOs: Enable path (active high: 0=input, 1=output)
+  input  wire       ena,
+  input  wire       clk,
+  input  wire       rst_n
 );
     
-    wire clk = io_in[0];
-    wire reset = io_in[1];
     wire [6:0] led_out;
-    assign io_out[6:0] = led_out;
+    assign uo_out[6:0] = led_out;
 
     // slow clock out on the last gpio
-    assign io_out[7] = second_counter[4];
+    assign uo_out[7] = second_counter[4];
 
     // external clock is 1000Hz, so need 10 bit counter
     reg [9:0] second_counter;
@@ -19,7 +23,7 @@ module seven_segment_seconds #( parameter MAX_COUNT = 1000 ) (
 
     always @(posedge clk) begin
         // if reset, set counter to 0
-        if (reset) begin
+        if (!rst_n) begin
             second_counter <= 0;
             digit <= 0;
         end else begin
