@@ -27,6 +27,7 @@ set ::env(BOTTOM_MARGIN_MULT) 2
 
 # absolute die size
 set ::env(FP_SIZING) absolute
+set ::env(FP_CORE_UTIL) 55
 
 set ::env(PL_BASIC_PLACEMENT) {0}
 set ::env(GRT_ALLOW_CONGESTION) "1"
@@ -47,6 +48,9 @@ set ::env(CLOCK_TREE_SYNTH) 1
 # period is in ns, so 20ns == 50mHz
 set ::env(CLOCK_PERIOD) "20"
 set ::env(CLOCK_PORT) {clk}
+
+# provide a way for people to stop the resizer from changing cells
+set ::env(RSZ_DONT_TOUCH_RX) "_notouch_"
 
 # hold/slack margin
 # set ::env(PL_RESIZER_HOLD_SLACK_MARGIN) 0.8 

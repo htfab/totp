@@ -5,10 +5,10 @@ project:
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
-#  source_files:        
-#    - counter.v
-#    - decoder.v
-#  top_module:  "tt_um_example"      # Put the name of your top module here, must start with "tt_um_". Make it unique by prepending your github username
+  source_files:
+    - counter.v
+    - decoder.v
+  top_module:  "tt_um_example"      # Put the name of your top module here, must start with "tt_um_". Make it unique by prepending your github username
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
 # Before changing this, please reach out to us on discord to discuss your design.
@@ -24,7 +24,7 @@ yaml_version: 3.5
 documentation: 
   author:       ""      # Your name
   title:        ""      # Project title
-  language:     "Wokwi" # other examples include Verilog, Amaranth, VHDL, etc
+  language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
   description:  ""      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
