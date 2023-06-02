@@ -36,7 +36,7 @@ module tb (
 
     // wire up the inputs and outputs
     wire [7:0] ui_in, uo_out, uio_in, uio_out, uio_oe;
-    wire rst_n, ena;
+    wire ena;
 
     assign ena = 1'b1;
     assign ui_in[0] = data;
