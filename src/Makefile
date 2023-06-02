@@ -9,7 +9,9 @@ TOPLEVEL_LANG ?= verilog
 ifneq ($(GATES),yes)
 
 # this is the only part you should need to modify:
-VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/counter.v $(PWD)/decoder.v
+VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/sha1_magic.v $(PWD)/sha1_mixer.v $(PWD)/sha1_block.v \
+				   $(PWD)/hmac_magic.v $(PWD)/hmac_mixer.v $(PWD)/hmac_block.v \
+				   $(PWD)/hotp.v $(PWD)/seg_magic.v $(PWD)/stream.v $(PWD)/top.v
 
 else
 
