@@ -31,8 +31,6 @@ module stream (
     reg [7:0] key_counter;
     reg [12:0] counter;
 
-    wire [4:0] rev_index = {~counter[3:0], 1'b1};
-
     always @(posedge clk) begin
         key_buf <= {key_buf[0], key_buf[`KEY_LEN-1:1]};
         key_counter <= key_counter + 1;
@@ -105,11 +103,7 @@ module stream (
                 hotp_rst_n <= 1;
                 counter <= counter + 1;
                 if (counter < `KEY_LEN) begin
-                    if (counter[4]) begin
-                        hotp_in <= key_buf[`KEY_LEN-32+rev_index];
-                    end else begin
-                        hotp_in <= key_buf[rev_index];
-                    end
+                    hotp_in <= key_buf[0];
                 end else if (counter < 512) begin
                     hotp_in <= 1'b0;
                 end else if (counter == 2719) begin
@@ -119,8 +113,8 @@ module stream (
             end else if (state == 3) begin
                 counter <= counter + 1;
                 if (counter < `MSG_LEN) begin
-                    msg_buf <= {msg_buf[`MSG_LEN-2:0], msg_buf[`MSG_LEN-1]};
-                    hotp_in <= msg_buf[31];
+                    msg_buf <= {msg_buf[0], msg_buf[`MSG_LEN-1:1]};
+                    hotp_in <= msg_buf[0];
                 end else if (counter < 64) begin
                     hotp_in <= 1'b0;
                 end else if (counter == 2719) begin
@@ -130,11 +124,7 @@ module stream (
             end else if (state == 4) begin
                 counter <= counter + 1;
                 if (counter < `KEY_LEN) begin
-                    if (counter[4]) begin
-                        hotp_in <= key_buf[`KEY_LEN-32+rev_index];
-                    end else begin
-                        hotp_in <= key_buf[rev_index];
-                    end
+                    hotp_in <= key_buf[0];
                 end else if (counter < 512) begin
                     hotp_in <= 1'b0;
                 end else if (counter == 6016) begin

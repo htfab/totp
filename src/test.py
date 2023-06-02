@@ -57,6 +57,12 @@ def hotp(seed, counter, length=6):
     h = (struct.unpack('>I', h[o:o+4])[0] & 0x7fffffff) % (10 ** length)
     return str(h).rjust(length, '0')
 
+def reverse_32s(s):
+    res = b''
+    for p in struct.iter_unpack('4s', s):
+        res += bytes.fromhex(hex(int(''.join(reversed(bin(int(p[0].hex(), 16))[2:].rjust(32, '0'))), 2))[2:].rjust(8, '0'))
+    return res
+
 segments = [ 63, 6, 91, 79, 102, 109, 125, 7, 127, 111 ]
 
 @cocotb.test()
@@ -69,6 +75,9 @@ async def test_totp(dut):
     key = b32decode(seed)
     counter = 0x35918cc
     totp = hotp(seed, counter, 8)
+
+    key_in = reverse_32s(key.ljust(20, b'\0'))
+    msg_in = reverse_32s(struct.pack('>Q', counter))
 
     dut._log.info("reset")
     dut.rst_n.value = 0
@@ -84,13 +93,13 @@ async def test_totp(dut):
     dut.rst_n.value = 1
 
     for i in range(160):
-        dut.data.value = key[i//8] >> 7-i%8 & 1 if i < 5*len(seed) else 0
+        dut.data.value = key_in[i//8] >> 7-i%8 & 1
         dut.key_en.value = 1
         await ClockCycles(dut.clk, 1)
     dut.key_en.value = 0
 
     for i in range(64):
-        dut.data.value = counter >> 63-i & 1
+        dut.data.value = msg_in[i//8] >> 7-i%8 & 1
         dut.msg_en.value = 1
         await ClockCycles(dut.clk, 1)
     dut.msg_en.value = 0
