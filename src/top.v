@@ -13,7 +13,6 @@ module tt_um_htfab_totp (
 
     wire data, key_en, msg_en, ready;
     wire hotp_rst_n, hotp_in, hotp_out;
-    wire muxed_rst_n, muxed_in;
     wire [2:0] sel;
     wire [3:0] bcd;
     wire [6:0] segs;
@@ -37,8 +36,8 @@ module tt_um_htfab_totp (
 
     hotp hotp (
         .clk,
-        .rst_n(muxed_rst_n),
-        .in(muxed_in),
+        .rst_n(hotp_rst_n),
+        .in(hotp_in),
         .out(hotp_out),
         .debug(hotp_debug)
     );
@@ -57,9 +56,7 @@ module tt_um_htfab_totp (
     assign sel = ui_in[5:3];
     assign uo_out[6:0] = segs;
     assign uo_out[7] = ready;
-    assign muxed_rst_n = ui_in[7] ? uio_in[0] : hotp_rst_n;
-    assign muxed_in = ui_in[7] ? uio_in[1] : hotp_in;
-    assign uio_out = ui_in[6] ? alt_debug : {bcd, debug};
-    assign uio_oe = ui_in[7] ? 8'b11111100 : 8'b11111111;
+    assign uio_out = {bcd, 4'b0};
+    assign uio_oe = 8'b11111111;
 
 endmodule
